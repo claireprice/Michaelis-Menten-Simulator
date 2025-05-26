@@ -125,10 +125,33 @@
     body.light-theme .footer {
       color: #444;
     }
+    .efficiency-bar {
+      height: 20px;
+      width: 100%;
+      background-color: #444;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    .efficiency-fill {
+      height: 100%;
+      background-color: #66ffcc;
+      width: 0%;
+      transition: width 0.4s ease-in-out;
+    }
+    .enzyme-visual {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .enzyme-visual img {
+      max-width: 150px;
+      height: auto;
+    }
   </style>
 </head>
 <body>
-  <div class="container" id="intro-section">
+  <div class="container" id="intro-page">
     <div class="button-bar">
       <label for="theme-toggle">Toggle Theme:</label>
       <select id="theme-toggle">
@@ -136,48 +159,60 @@
         <option value="light">Light</option>
       </select>
     </div>
-    <h1>Michaelis-Menten Visual Simulator</h1>
+    <h1 style="font-size: 2rem; color: #66aaff;">Michaelis-Menten Visual Simulator</h1>
 
     <div class="intro">
-      <p><strong>What is Michaelis-Menten kinetics?</strong></p>
-      <p>Michaelis-Menten kinetics is a way scientists describe how enzymes work. Enzymes are special proteins that speed up chemical reactions. They grab onto a molecule (called the <em>substrate</em>) and turn it into something new.</p>
-      <p>The Michaelis-Menten equation shows how fast this happens depending on how much substrate there is. Two important values in this equation are:</p>
-      <ul>
-        <li><strong>V<sub>max</sub></strong> – the fastest the reaction can go when the enzyme is working as hard as it can.</li>
-        <li><strong>K<sub>m</sub></strong> – the amount of substrate needed to make the reaction go at half its maximum speed. It tells us how well the enzyme binds to the substrate.</li>
-      </ul>
-      <p>This simulator lets you change those two values using sliders. As you do, you'll see how the reaction rate graph changes and get a simple explanation to help you understand.</p>
+      <p><strong>Understanding Michaelis-Menten Kinetics</strong></p>
+      <p>Michaelis-Menten kinetics helps us understand how enzymes interact with substrates to speed up chemical reactions. As the concentration of a substrate increases, the reaction speed also increases—but only up to a point. This point is known as <strong>V<sub>max</sub></strong>, the maximum rate the enzyme can achieve when saturated with substrate.</p>
+      <p><strong>K<sub>m</sub></strong> represents the substrate concentration at which the reaction speed is half of V<sub>max</sub>. A lower K<sub>m</sub> means the enzyme binds the substrate more effectively.</p>
+      <p>Use this simulator to adjust V<sub>max</sub> and K<sub>m</sub> with the sliders, and observe how these changes affect the reaction rate. The graph and explanation below will update to help you visualize and interpret the results.</p>
     </div>
 
     <div class="button-bar">
       <button id="start-simulator">Go to Simulator</button>
     </div>
+  </div>
 
-    <div id="simulator-controls" style="display:none">
-      <label class="tooltip-label" data-tooltip="Maximum possible reaction rate">
-        V<sub>max</sub>: <span id="vmax-val">1</span>
-      </label>
-      <input type="range" id="vmax" min="0.1" max="10" value="1" step="0.1" />
+  <div class="container" id="simulator-page" style="display:none">
+    <div id="simulator-controls" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <label class="tooltip-label" data-tooltip="Maximum possible reaction rate">
+      V<sub>max</sub>: <span id="vmax-val">1</span>
+    </label>
+    <input type="range" id="vmax" min="0.1" max="10" value="1" step="0.1" />
 
-      <label class="tooltip-label" data-tooltip="Substrate concentration at half of Vmax">
-        K<sub>m</sub>: <span id="km-val">0.5</span>
-      </label>
-      <input type="range" id="km" min="0.1" max="10" value="0.5" step="0.1" />
+    <label class="tooltip-label" data-tooltip="Substrate concentration at half of Vmax">
+      K<sub>m</sub>: <span id="km-val">0.5</span>
+    </label>
+    <input type="range" id="km" min="0.1" max="10" value="0.5" step="0.1" />
 
-      <div class="button-bar">
-        <button onclick="resetParameters()">Reset Parameters</button>
-      </div>
+    <div class="button-bar" style="margin: 10px 0 0;">
+      <button onclick="resetParameters()">Reset Parameters</button>
+    </div>
+  </div>
 
-      <div id="graph"></div>
-
-      <div class="explanation">
-        <div class="explanation-box" id="explanation"></div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div id="graph" style="height: 280px; width: 100%; border-radius: 6px; background-color: #202034; box-shadow: 0 2px 6px rgba(0,0,0,0.4);"></div>
+    <div class="efficiency-display" style="margin-top: 10px; background-color: #2e594f; border-left: 5px solid #33cc99; padding: 10px; border-radius: 6px; font-size: 0.95rem;">
+      <p style="margin: 0 0 6px 0;"><strong>Reaction Efficiency</strong><br>
+      This shows how fast the reaction is going at [S] = 10 compared to the fastest it could go under current conditions.</p>
+      <span id="efficiency-text">0%</span>
+      <div class="efficiency-bar">
+        <div id="efficiency-fill" class="efficiency-fill"></div>
       </div>
     </div>
-
-    <div class="footer">
-      &copy; Claire L. Price
+    <div class="explanation" style="margin-top: 10px;">
+      <div class="explanation-box" id="explanation"></div>
     </div>
+  </div>
+</div>
+</div>
+
+      </div>
+      </div>
+      
+    </div>
+    <div class="footer">&copy; Claire L. Price</div>
   </div>
 
   <script>
@@ -187,12 +222,14 @@
       document.body.classList.toggle("light-theme", theme === "light");
     });
 
+    const introPage = document.getElementById("intro-page");
+    const simulatorPage = document.getElementById("simulator-page");
     const simulatorControls = document.getElementById("simulator-controls");
     const startButton = document.getElementById("start-simulator");
     startButton.addEventListener("click", () => {
-      simulatorControls.style.display = "block";
-      startButton.style.display = "none";
-      simulatorControls.scrollIntoView({ behavior: "smooth" });
+      introPage.style.display = "none";
+      simulatorPage.style.display = "block";
+      simulatorPage.scrollIntoView({ behavior: "smooth" });
     });
 
     const vmaxSlider = document.getElementById("vmax");
@@ -284,8 +321,13 @@
         interpretation += "<strong>Km decreased:</strong> Less substrate is needed to reach half the top speed. This means the enzyme is more sensitive.<br>";
       }
 
-      explanation.innerHTML = `At [S] = ${S_values[50].toFixed(1)}, v = ${v_values[50].toFixed(2)}.<br>${kineticRegion}<br><br>${interpretation}`;
-      explanation.classList.add("visible");
+      const vAt10 = v_values[50];
+      const efficiency = Math.min((vAt10 / v_values[v_values.length - 1]) * 100, 100).toFixed(0);
+      explanation.innerHTML = `<p><strong>At [S] = ${S_values[50].toFixed(1)}</strong>, the reaction rate <strong>v = <span style='color:#66ffcc;'>${vAt10.toFixed(2)}</span></strong>.</p><p>${kineticRegion}</p><p>${interpretation}</p>`;
+      document.getElementById("efficiency-fill").style.width = efficiency + "%";
+      document.getElementById("efficiency-text").textContent = efficiency + "%";
+
+            explanation.classList.add("visible");
       explanation.scrollIntoView({ behavior: "smooth" });
 
       previousVmax = Vmax;

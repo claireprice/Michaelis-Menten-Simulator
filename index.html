@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Michaelis-Menten Simulator</title>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.27.1/plotly.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e1e2f;
+      margin: 0;
+      padding: 20px;
+      color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #2b2b3d;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .intro {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      background-color: #3a3a55;
+      padding: 15px;
+      border-left: 5px solid #66aaff;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin: 12px 0 4px;
+    }
+    input[type=range] {
+      width: 100%;
+    }
+    .tooltip-label {
+      display: inline-block;
+      position: relative;
+      cursor: help;
+    }
+    .tooltip-label::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8em;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .tooltip-label:hover::after {
+      opacity: 1;
+    }
+    .equation {
+      text-align: center;
+      margin: 20px 0;
+    }
+    #graph {
+      margin-top: 30px;
+    }
+    .explanation {
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+    .explanation-box {
+      background-color: #3a3a55;
+      border-left: 5px solid #66aaff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
+    .explanation-box.visible {
+      opacity: 1;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 40px;
+      color: #aaa;
+    }
+    .button-bar {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button-bar button {
+      background: #66aaff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .button-bar button:hover {
+      background: #5599dd;
+    }
+    body.light-theme {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  body.light-theme .container {
+    background: #f4f4f4;
+    color: #000;
+  }
+  body.light-theme .intro,
+  body.light-theme .explanation-box {
+    background-color: #e6eef9;
+    border-left: 5px solid #3366cc;
+  }
+  body.light-theme .footer {
+    color: #444;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="button-bar">
+      <label for="theme-toggle">Toggle Theme:</label>
+      <select id="theme-toggle">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </div>
+    <h1>Michaelis-Menten Visual Simulator</h1>
+
+    <div class="intro">
+      <p><strong>What is Michaelis-Menten kinetics?</strong></p>
+      <p>Michaelis-Menten kinetics is a way scientists describe how enzymes work. Enzymes are special proteins that speed up chemical reactions. They grab onto a molecule (called the <em>substrate</em>) and turn it into something new.</p>
+      <p>The Michaelis-Menten equation shows how fast this happens depending on how much substrate there is. Two important values in this equation are:</p>
+      <ul>
+        <li><strong>V<sub>max</sub></strong> – the fastest the reaction can go when the enzyme is working as hard as it can.</li>
+        <li><strong>K<sub>m</sub></strong> – the amount of substrate needed to make the reaction go at half its maximum speed. It tells us how well the enzyme binds to the substrate.</li>
+      </ul>
+      <p>This simulator lets you change those two values using sliders. As you do, you'll see how the reaction rate graph changes and get a simple explanation to help you understand.</p>
+    </div>
+
+    <div class="equation">
+      \[ v = \frac{V_{\text{max}} [S]}{K_m + [S]} \]
+    </div>
+
+<label class="tooltip-label" data-tooltip="Maximum possible reaction rate">
+      V<sub>max</sub>: <span id="vmax-val">1</span>
+    </label>
+    <input type="range" id="vmax" min="0.1" max="10" value="1" step="0.1" />
+
+    <label class="tooltip-label" data-tooltip="Substrate concentration at half of Vmax">
+      K<sub>m</sub>: <span id="km-val">0.5</span>
+    </label>
+    <input type="range" id="km" min="0.1" max="10" value="0.5" step="0.1" />
+
+    <div class="button-bar">
+      <button onclick="resetParameters()">Reset Parameters</button>
+    </div>
+
+    <div id="graph"></div>
+
+    <div class="explanation">
+      <div class="explanation-box" id="explanation"></div>
+    </div>
+
+    <div class="footer">
+      &copy; Claire L. Price
+    </div>
+  </div>
+
+  <script>
+    const vmaxSlider = document.getElementById("vmax");
+    const kmSlider = document.getElementById("km");
+    const vmaxVal = document.getElementById("vmax-val");
+    const kmVal = document.getElementById("km-val");
+    const explanation = document.getElementById("explanation");
+
+    function michaelisMenten(S, Vmax, Km) {
+      return (Vmax * S) / (Km + S);
+    }
+
+    function resetParameters() {
+      vmaxSlider.value = 1;
+      kmSlider.value = 0.5;
+      updateGraph();
+    }
+
+    let previousVmax = parseFloat(vmaxSlider.value);
+    let previousKm = parseFloat(kmSlider.value);
+
+    function updateGraph() {
+      const Vmax = parseFloat(vmaxSlider.value);
+      const Km = parseFloat(kmSlider.value);
+      vmaxVal.textContent = Vmax;
+      kmVal.textContent = Km;
+
+      const S_values = Array.from({ length: 100 }, (_, i) => i * 0.2);
+      const v_values = S_values.map(S => michaelisMenten(S, Vmax, Km));
+
+      const annotations = [
+        {
+          x: Km,
+          y: michaelisMenten(Km, Vmax, Km),
+          xref: 'x',
+          yref: 'y',
+          text: 'Km, v = 0.5 Vmax',
+          showarrow: true,
+          arrowhead: 4,
+          ax: -40,
+          ay: -40
+        },
+        {
+          x: S_values[S_values.length - 1],
+          y: Vmax,
+          xref: 'x',
+          yref: 'y',
+          text: 'Vmax',
+          showarrow: false,
+          yanchor: 'bottom'
+        }
+      ];
+
+      Plotly.newPlot("graph", [{
+        x: S_values,
+        y: v_values,
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { width: 4 },
+        name: 'v vs [S]'
+      }], {
+        margin: { t: 10 },
+        xaxis: { title: '[S] (substrate concentration)' },
+        yaxis: { title: 'v (reaction rate)' },
+        annotations: annotations,
+        responsive: true
+      });
+
+      let kineticRegion;
+      if (S_values[50] < Km) {
+        kineticRegion = "First-order region: Reaction rate increases almost in step with substrate amount.";
+      } else if (S_values[50] > 5 * Km) {
+        kineticRegion = "Zero-order region: Reaction is going as fast as it can. Adding more substrate won't make it faster.";
+      } else {
+        kineticRegion = "In-between region: Reaction rate increases but starts to level off.";
+      }
+
+      let interpretation = "";
+
+      if (Vmax > previousVmax) {
+        interpretation += "<strong>Vmax increased:</strong> The highest possible speed of the reaction has gone up.<br>";
+      } else if (Vmax < previousVmax) {
+        interpretation += "<strong>Vmax decreased:</strong> The reaction can't go as fast now.<br>";
+      }
+
+      if (Km > previousKm) {
+        interpretation += "<strong>Km increased:</strong> It now takes more substrate to get halfway to the top speed.<br>";
+      } else if (Km < previousKm) {
+        interpretation += "<strong>Km decreased:</strong> Less substrate is needed to reach half the top speed. This means the enzyme is more sensitive.<br>";
+      }
+
+      explanation.innerHTML = `At [S] = ${S_values[50].toFixed(1)}, v = ${v_values[50].toFixed(2)}.<br>${kineticRegion}<br><br>${interpretation}`;
+      explanation.classList.add("visible");
+      explanation.scrollIntoView({ behavior: "smooth" });
+
+      previousVmax = Vmax;
+      previousKm = Km;
+    }
+
+    vmaxSlider.addEventListener("input", updateGraph);
+    kmSlider.addEventListener("input", updateGraph);
+
+    updateGraph();
+  </script>
+<script>
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("change", function () {
+      const theme = themeToggle.value;
+      document.body.classList.toggle("light-theme", theme === "light");
+    });
+  </script>
+</body>
+</html>

@@ -68,13 +68,24 @@
     </div>
     <h1>Michaelis-Menten Visual Simulator</h1>
     <div class="intro">
-      <p><strong>Understanding Michaelis-Menten Kinetics</strong></p>
-      <p>The behavior of many enzymes can be described using the <strong>Michaelis-Menten equation</strong>: <br><strong>v = (V<sub>max</sub> × [S]) / (K<sub>m</sub> + [S])</strong>. This equation tells us how fast a reaction occurs (v) depending on how much substrate ([S]) is available, how efficiently the enzyme binds the substrate (K<sub>m</sub>), and the maximum rate it can achieve (V<sub>max</sub>).</p>
-      <p>Michaelis-Menten kinetics helps us understand how enzymes interact with substrates to speed up chemical reactions. As the concentration of a substrate increases, the reaction speed also increases—but only up to a point. This point is known as <strong>V<sub>max</sub></strong>, the maximum rate the enzyme can achieve when saturated with substrate.</p>
-      <p><strong>K<sub>m</sub></strong> represents the substrate concentration at which the reaction speed is half of V<sub>max</sub>. A lower K<sub>m</sub> means the enzyme binds the substrate more effectively.</p>
-      <p><strong>v</strong> is the speed of the reaction — how fast the enzyme converts substrate to product at a given substrate concentration. A higher value of <strong>v</strong> means the enzyme is working faster to convert substrate to product. For example, if <strong>v</strong> increases after raising V<sub>max</sub>, it means the enzyme has a higher maximum speed. If <strong>v</strong> decreases when K<sub>m</sub> is higher, it may indicate the enzyme needs more substrate to work efficiently.</p>
-      <p>Use this simulator to adjust V<sub>max</sub> and K<sub>m</sub> with the sliders, and observe how these changes affect the reaction rate.</p>
-    </div>
+  <p><strong>Understanding Michaelis-Menten Kinetics</strong></p>
+
+  <div style="background-color: #26263a; padding: 10px 15px; border-radius: 6px; margin: 10px 0; font-size: 1.1em;">
+    <strong>Michaelis-Menten Equation:</strong><br>
+    <code>v = (V<sub>max</sub> × [S]) / (K<sub>m</sub> + [S])</code><br>
+    <span style="font-size: 0.95em; color: #ccc;">This formula shows how fast a reaction (v) proceeds based on substrate concentration [S], enzyme efficiency (K<sub>m</sub>), and the maximum rate (V<sub>max</sub>).</span>
+  </div>
+
+  <p>Michaelis-Menten kinetics helps us understand how enzymes speed up chemical reactions. As substrate concentration increases, the reaction rate (v) also increases, until it begins to level off.</p>
+
+  <p><strong>V<sub>max</sub></strong> is the maximum rate an enzyme can achieve when fully saturated with substrate. A higher V<sub>max</sub> means the enzyme can work faster at full capacity.</p>
+
+  <p><strong>K<sub>m</sub></strong> is the substrate concentration at which the reaction speed is half of V<sub>max</sub>. A lower K<sub>m</sub> indicates better enzyme efficiency—it takes less substrate to get going.</p>
+
+  <p><strong>v</strong> represents the speed of the reaction: how quickly product is formed at a given [S]. A larger v means a faster reaction. For example, increasing V<sub>max</sub> raises v at high substrate levels, Increasing K<sub>m</sub> may lower v at the same substrate level.</p>
+
+  <p>Use this simulator to adjust V<sub>max</sub> and K<sub>m</sub> with the sliders, and observe how these changes affect the enzyme’s reaction rate.</p>
+</div>
     <div class="button-bar">
       <button id="start-simulator">Go to Simulator</button>
     </div>
@@ -263,4 +274,3 @@
 </script>
 </body>
 </html>
-

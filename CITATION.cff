@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this simulator in your teaching or research, please cite it as below."
+authors:
+  - family-names: Price
+    given-names: Claire
+    affiliation: Your Institution Name
+    orcid: https://orcid.org/0000-0000-0000-0000  # Replace with actual ORCID if available
+title: Michaelis-Menten Simulator
+version: 1.0.0
+date-released: 2025-05-27
+url: https://github.com/claireprice/Michaelis-Menten-Simulator
+repository-code: https://github.com/claireprice/Michaelis-Menten-Simulator
+license: CC-BY-NC-4.0
+doi: 10.5281/zenodo.xxxxxxx  # Replace with actual Zenodo DOI
+type: software

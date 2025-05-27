@@ -15,8 +15,6 @@ An interactive, browser-based tool for visualizing and exploring the principles 
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15530205.svg)](https://doi.org/10.5281/zenodo.15530205)
 
-reStruct
-
 ## License
 
 This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license.

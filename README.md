@@ -13,3 +13,4 @@ An interactive, browser-based tool for visualizing and exploring the principles 
 - Intuitive, mobile-responsive user interface
 - Ideal for **undergraduate biochemistry education**
 
+© Claire Price, 2025. All rights reserved.

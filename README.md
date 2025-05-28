@@ -8,7 +8,7 @@ An interactive, browser-based tool for visualizing and exploring the principles 
 
 ## Features
 
-- Adjustable parameters for **Km**, **Vmax**, and **substrate concentration**
+- Adjustable parameters for **Km** and **Vmax**
 - Real-time graphing of reaction rate curves
 - Intuitive, mobile-responsive user interface
 - Ideal for **undergraduate biochemistry education**

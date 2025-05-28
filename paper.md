@@ -14,7 +14,7 @@ authors:
 
 # Summary
 
-The Michaelis-Menten Simulator is a browser-based educational tool designed to help students visualize and explore enzyme kinetics through the classical Michaelis-Menten model. Built with HTML, CSS, and JavaScript, the simulator allows users to interactively adjust parameters such as Km, and Vmax, and observe real-time changes in the reaction rate curve.
+The Michaelis-Menten Simulator is a browser-based educational tool designed to help students visualize and explore enzyme kinetics through the classical Michaelis-Menten model. Built with HTML, CSS, and JavaScript, the simulator allows users to interactively adjust parameters such as Km and Vmax, and observe real-time changes in the reaction rate curve.
 
 This tool is intended primarily for undergraduate biochemistry and molecular biology education, offering an intuitive and engaging way to reinforce conceptual understanding of enzyme-substrate dynamics. It requires no installation and runs on any modern browser, making it highly accessible for classroom or remote use.
 
